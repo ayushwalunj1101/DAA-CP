@@ -1,0 +1,181 @@
+@import "tailwindcss";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/schibsted-grotesk";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";
+
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+
+/* ---------- Night Desk tokens (dark is the default theme) ----------
+   Chart colours were validated with the dataviz palette checker against --panel:
+   bull/bear pass CVD separation (deutan dE 11.7) in both themes; series s1..s4 are the
+   reference categorical steps for each surface. Status meaning never relies on colour
+   alone: every class carries a triangle glyph and a text label. */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0b0e13;
+  --bg-raised: #0e1218;
+  --panel: #121722;
+  --panel-2: #171d29;
+  --line: #212937;
+  --line-strong: #2d3746;
+  --ink: #ece7dc;
+  --ink-2: #b9b5ab;
+  --muted: #7f8593;
+  --accent: #e8a33d;
+  --accent-ink: #1a1205;
+  --accent-soft: rgb(232 163 61 / 0.12);
+  --bull: #14a38b;
+  --bull-dim: #0b5449;
+  --bull-soft: rgb(20 163 139 / 0.15);
+  --bear: #e0603a;
+  --bear-dim: #96432a;
+  --bear-soft: rgb(224 96 58 / 0.15);
+  --neutral: #394150;
+  --s1: #3987e5;
+  --s2: #d95926;
+  --s3: #199e70;
+  --s4: #c98500;
+  --grid: #1c2330;
+  --axis: #333c4b;
+  --bench: #8a8f9c;
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 18px 40px -24px rgb(0 0 0 / 0.8);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f3efe5;
+  --bg-raised: #f7f4ec;
+  --panel: #fbf8f1;
+  --panel-2: #f2ede1;
+  --line: #e2dbcc;
+  --line-strong: #d2c9b7;
+  --ink: #16181d;
+  --ink-2: #43464e;
+  --muted: #777a80;
+  --accent: #b8730f;
+  --accent-ink: #fff8ec;
+  --accent-soft: rgb(184 115 15 / 0.12);
+  --bull: #0b8a74;
+  --bull-dim: #82c6b9;
+  --bull-soft: rgb(11 138 116 / 0.12);
+  --bear: #c9471f;
+  --bear-dim: #eaa78f;
+  --bear-soft: rgb(201 71 31 / 0.12);
+  --neutral: #d7d0c3;
+  --s1: #2a78d6;
+  --s2: #eb6834;
+  --s3: #1baf7a;
+  --s4: #eda100;
+  --grid: #e7e1d4;
+  --axis: #cec5b4;
+  --bench: #8a8579;
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.7) inset, 0 18px 40px -28px rgb(60 40 10 / 0.35);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-raised: var(--bg-raised);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-bull: var(--bull);
+  --color-bull-soft: var(--bull-soft);
+  --color-bear: var(--bear);
+  --color-bear-soft: var(--bear-soft);
+  --color-neutral: var(--neutral);
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Schibsted Grotesk Variable", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", monospace;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Chart-paper grid fading out from the top right, like a light over the desk. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 75% 0%, black 10%, transparent 75%);
+    opacity: 0.55;
+  }
+  /* Fine grain so large dark areas do not look flat. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  ::selection {
+    background: var(--accent-soft);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+@layer components {
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+  }
+  .hairline {
+    border-color: var(--line);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
